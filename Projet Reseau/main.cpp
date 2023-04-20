@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Player.h"
+#include <SFML/Graphics.hpp>
 
 using namespace std;
 
@@ -20,8 +21,23 @@ int main()
     player2->playerName[strcspn((player2->playerName), "\n")] = '\0';
 
     cout << "\n" << player1->playerName << " est le joueur 1 et " << player2->playerName << " est le joueur 2. \n" << endl;
-    while (game == true) {
+    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Green);
 
+    while (window.isOpen())
+    {
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        window.clear();
+        window.draw(shape);
+        window.display();
     }
+
     return 0;
 }
