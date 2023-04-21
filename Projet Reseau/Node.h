@@ -8,7 +8,7 @@ class Node
 public:
 	Node();
 	~Node();
-	void CreateNode(int x, int y);
+	void CreateNode(int x, int y, std::string name);
 
 	int x_cord;
 	int y_cord;
@@ -23,6 +23,6 @@ public:
 	State state;
 
 	bool hasShip;
-	std::string name;
+	std::string nodeName;
 };
 

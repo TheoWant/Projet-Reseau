@@ -9,7 +9,7 @@ Node::Node()
 
 	hasShip = false;
 
-	name = "Patrice Evra (petite blague vous fachez pas monsieur Seccia)";
+	nodeName = "Patrice Evra (petite blague vous fachez pas monsieur Seccia)";
 }
 
 Node::~Node()
@@ -17,7 +17,9 @@ Node::~Node()
 
 }
 
-void CreateNode(int x, int y)
+void Node::CreateNode(int x, int y, std::string name)
 {
-
+	x_cord = x;
+	y_cord = y;
+	nodeName = name;
 }
