@@ -4,39 +4,97 @@ using namespace std;
 
 bool game = true;
 
+sf::RectangleShape shipPart;
+
+
+
+/*void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& window)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (downFaced)
+		{
+			shipPart.setPosition(pos.x, pos.y + i * 30);
+		}
+		else
+		{
+			shipPart.setPosition(pos.x + i * 30, pos.y);
+		}
+		window.draw(shipPart);
+	}
+}
+
+bool placeShip(sf::Vector2i pos, int size, bool downFaced, Field& f)
+{
+	if (f.CheckShip(pos, size, downFaced))
+	{
+		f.AddShip(Ship(size, pos, downFaced));
+		return true;
+	}
+	return false;
+}*/
+
 int main()
 {
-    Player* player1 = new Player();
-    Player* player2 = new Player();
+	bool shipsReady = false;
 
-    Grid* grid = new Grid();
-    grid->CreateGrid();
 
-    for (int n = 0; n < grid->grid.size(); n++)
-    {
-        cout << grid->grid[n]->nodeName;
-        cout << " ";
-        if((n+1)%10 == 0)
-            cout << "\n";
-    }
-    
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
+	srand(static_cast<unsigned int>(time(0)));
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+	shipPart.setFillColor(sf::Color(128, 128, 128, 128));
+	shipPart.setSize(sf::Vector2f(60.f, 60.f));
 
-        window.clear();
-        window.draw(shape);
-        window.display();
-    }
+	Grid gridPlayer(sf::Vector2f(60, 60));
+	Grid gridEnemy(sf::Vector2f(720, 60));
 
-    return 0;
+	gridPlayer.CreateGrid();
+	gridEnemy.CreateGrid();
+
+	//f.RandomizeShips();
+	//f1.RandomizeShips();
+
+
+	int size = 4;
+	int sizestep = 1;
+	bool downFaced = false;
+
+
+
+	while (window.isOpen())
+	{
+		int x = sf::Mouse::getPosition(window).x - (sf::Mouse::getPosition(window).x % 30);
+		int y = sf::Mouse::getPosition(window).y - (sf::Mouse::getPosition(window).y % 30);
+
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				
+			}
+			if (event.type == sf::Event::MouseWheelMoved)
+			{
+				downFaced = !downFaced;
+			}
+		}
+
+		//if (gridPlayer.CheckLose())
+		//{
+		//	gridEnemy.SetEnemyTransp(255);
+		//}
+
+		window.clear(sf::Color(200, 200, 200));
+
+		gridPlayer.Draw(window);
+		gridEnemy.Draw(window);
+
+		//drawShip(size, sf::Vector2f(x, y), downFaced, window);
+
+		window.display();
+	}
+
+	return 0;
 }
