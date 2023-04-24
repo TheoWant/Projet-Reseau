@@ -45,6 +45,7 @@ int main()
 	gridPlayer1.CreateGrid();
 	gridPlayer2.CreateGrid();
 
+	gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
 
 	int size = 4;
 	int sizestep = 1;
@@ -108,6 +109,26 @@ int main()
 											if (nodeToCheck != nullptr || !nodeToCheck->hasShip)
 											{
 												nodeToCheck->hasShip = true;
+												switch (shipPlacement)
+												{
+												case 0:
+													nodeToCheck->carrier = true;
+													break;
+												case 1:
+													nodeToCheck->cruiser = true;
+													break;
+												case 2:
+													nodeToCheck->atb = true;
+													break;
+												case 3:
+													nodeToCheck->submarine = true;
+													break;
+												case 4:
+													nodeToCheck->torpedo = true;
+													break;
+												default:
+													break;
+												}
 											}
 										}
 										else
@@ -116,6 +137,26 @@ int main()
 											if (nodeToCheck != nullptr || !nodeToCheck->hasShip)
 											{
 												nodeToCheck->hasShip = true;
+												switch (shipPlacement)
+												{
+												case 0:
+													nodeToCheck->carrier = true;
+													break;
+												case 1:
+													nodeToCheck->cruiser = true;
+													break;
+												case 2:
+													nodeToCheck->atb = true;
+													break;
+												case 3:
+													nodeToCheck->submarine = true;
+													break;
+												case 4:
+													nodeToCheck->torpedo = true;
+													break;
+												default:
+													break;
+												}
 											}
 										}
 									}
@@ -129,7 +170,7 @@ int main()
 					else if (gameManager.state == GameManager::shipShooting)
 					{
 						Node* node = gridPlayer2.CheckOnGrid(x, y);
-						if (node != nullptr)
+						if (node != nullptr && node->state == Node::base)
 						{
 							//Check si la case a un bateau
 							if (node->hasShip)
@@ -152,6 +193,8 @@ int main()
 							player2.playerTurn = true;
 						}
 					}
+					system("cls");
+					gameManager.SaveGrid(&gridPlayer1,&gridPlayer2);
 				}
 				else if(player2.playerTurn)
 				{
@@ -196,6 +239,26 @@ int main()
 											if (nodeToCheck != nullptr || !nodeToCheck->hasShip)
 											{
 												nodeToCheck->hasShip = true;
+												switch (shipPlacement)
+												{
+												case 0:
+													nodeToCheck->carrier = true;
+													break;
+												case 1:
+													nodeToCheck->cruiser = true;
+													break;
+												case 2:
+													nodeToCheck->atb = true;
+													break;
+												case 3:
+													nodeToCheck->submarine = true;
+													break;
+												case 4:
+													nodeToCheck->torpedo = true;
+													break;
+												default:
+													break;
+												}
 											}
 										}
 										else
@@ -204,6 +267,26 @@ int main()
 											if (nodeToCheck != nullptr || !nodeToCheck->hasShip)
 											{
 												nodeToCheck->hasShip = true;
+												switch (shipPlacement)
+												{
+												case 0:
+													nodeToCheck->carrier = true;
+													break;
+												case 1:
+													nodeToCheck->cruiser = true;
+													break;
+												case 2:
+													nodeToCheck->atb = true;
+													break;
+												case 3:
+													nodeToCheck->submarine = true;
+													break;
+												case 4:
+													nodeToCheck->torpedo = true;
+													break;
+												default:
+													break;
+												}
 											}
 										}
 									}
@@ -225,7 +308,7 @@ int main()
 					else if (gameManager.state == GameManager::shipShooting)
 					{
 						Node* node = gridPlayer1.CheckOnGrid(x, y);
-						if (node != nullptr)
+						if (node != nullptr && node->state == Node::base)
 						{
 							//Check si la case a un bateau
 							if (node->hasShip)
@@ -246,6 +329,8 @@ int main()
 							player1.playerTurn = true;
 						}
 					}
+					system("cls");
+					gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
 				}
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
@@ -255,6 +340,20 @@ int main()
 		}
 
 		window.clear(sf::Color(200, 200, 200));
+
+		if (gameManager.state == GameManager::endGame)
+		{
+			if (player1.playerTurn)
+			{
+				gridPlayer2.gridDraw.setFillColor(sf::Color::Green);
+				gridPlayer1.gridDraw.setFillColor(sf::Color::Red);
+			}
+			else if (player2.playerTurn)
+			{
+				gridPlayer1.gridDraw.setFillColor(sf::Color::Green);
+				gridPlayer2.gridDraw.setFillColor(sf::Color::Red);
+			}
+		}
 
 		gridPlayer1.Draw(window);
 		gridPlayer2.Draw(window);

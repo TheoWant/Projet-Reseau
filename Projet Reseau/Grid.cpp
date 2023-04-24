@@ -4,9 +4,13 @@ Grid::Grid(sf::Vector2f pos)
 {
 	this->pos = pos;
 
-	hit.setRadius(6.f);
-	hit.setFillColor(sf::Color::Black);
-	hit.setOrigin(-12.f, -12.f);
+	//hit.setRadius(6.f);
+	//hit.setFillColor(sf::Color::Black);
+	//hit.setOrigin(-12.f, -12.f);
+
+	hit.setRadius(12.f);
+	hit.setFillColor(sf::Color::Red);
+	hit.setOrigin(-9.f, -9.f);
 
 	shipHit.setRadius(12.f);
 	shipHit.setFillColor(sf::Color::Red);
@@ -42,11 +46,10 @@ Grid::~Grid()
 
 void Grid::CreateGrid()
 {
-	shipToShoot = 17;
-	for (int i = 0; i < 10; i++) 
+	for (int i = 0; i < 11; i++) 
 	{
 		char c = 'A' + i;
-		for (int j = 0; j < 10; j++)
+		for (int j = 0; j < 11; j++)
 		{
 			Node* node = new Node();
 			std::string s = std::string(1, c) + std::to_string(j+1);
