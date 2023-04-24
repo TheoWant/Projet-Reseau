@@ -1,30 +1,18 @@
-#ifndef SERVER_H_
-#define SERVER_H_
+#pragma once
 
-#include <SFML/Network.hpp>
-#include <iostream>
-#include <list>
+#include <vector>
 #include "Player.h"
 
 class Server {
 public:
     Server(unsigned short port);
 
-    void stopServer();
-    void startServer();
-    bool isRunning() const;
-
 private:
     bool _run;
-    sf::TcpListener _listener;
-    sf::SocketSelector _selector;
-    std::list<Player*> _Players;
+    WSADATA wsaData;
+    SOCKET listenSocket;
+    SOCKADDR_IN serverSocketInfo;
 
-    void sendToEnemy(Player& p, std::string move);
-    void manageGames();
-    void disconnectAll();
-    std::vector<std::string> extractPacket(sf::Packet p);
-    bool checkStatus(sf::Socket::Status status, sf::TcpSocket& socket);
+    std::vector<Player> players;
+    bool waitForPlayer;
 };
-
-#endif /* !SERVER_H_ */

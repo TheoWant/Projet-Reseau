@@ -40,6 +40,8 @@ bool placeShip(sf::Vector2i pos, int size, bool downFaced, Field& f)
 
 int main()
 {
+	// ========== faut ranger ca ==========
+
 	WSADATA WSAData;
 	SOCKET sock;
 	SOCKADDR_IN socketInfo;
@@ -49,17 +51,17 @@ int main()
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {}
 
 	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	///socketInfo.sin_addr.s_addr = InetPton("127.0.0.1");
 	InetPton(AF_INET, L"127.0.0.1", &socketInfo.sin_addr.s_addr);
 	socketInfo.sin_family = AF_INET;
 	socketInfo.sin_port = htons(25565);
-	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo));
-	if (recv(sock, buffer, sizeof(buffer), 0) != SOCKET_ERROR)
+
+	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
+	if (recv(sock, buffer, sizeof(buffer), 0) != SOCKET_ERROR) // receive data from server
 	{
-		cout << buffer << endl;
+		cout << buffer << endl; // print data
 	}
-	closesocket(sock);
-	WSACleanup();
+	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
+	WSACleanup(); // close winsock
 
 
 
