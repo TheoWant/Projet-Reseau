@@ -1,4 +1,8 @@
 #include "framework.h"
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")
+///////#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 using namespace std;
 
@@ -36,9 +40,36 @@ bool placeShip(sf::Vector2i pos, int size, bool downFaced, Field& f)
 
 int main()
 {
+	WSADATA WSAData;
+	SOCKET sock;
+	SOCKADDR_IN socketInfo;
+	char buffer[255];
+
+	WSADATA wsaData;
+	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {}
+
+	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	///socketInfo.sin_addr.s_addr = InetPton("127.0.0.1");
+	InetPton(AF_INET, L"127.0.0.1", &socketInfo.sin_addr.s_addr);
+	socketInfo.sin_family = AF_INET;
+	socketInfo.sin_port = htons(25565);
+	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo));
+	if (recv(sock, buffer, sizeof(buffer), 0) != SOCKET_ERROR)
+	{
+		cout << buffer << endl;
+	}
+	closesocket(sock);
+	WSACleanup();
+
+
+
+
+
+
+
+
+
 	bool shipsReady = false;
-
-
 	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
 	srand(static_cast<unsigned int>(time(0)));
 
