@@ -19,7 +19,7 @@ public:
 	void Draw(sf::RenderWindow& window);
 	bool Click(sf::Vector2i clickpos);
 
-	Node* grid[10][10];
+	Node* grid[11][11];
 	int shipToShoot;
 };
 
