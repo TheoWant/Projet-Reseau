@@ -50,7 +50,7 @@ void Grid::CreateGrid()
 		{
 			Node* node = new Node();
 			std::string s = std::string(1, c) + std::to_string(j+1);
-			node->CreateNode(i, j+1, s);
+			node->CreateNode(pos.x + (60*i), pos.y + (60*(j)), s);
 			grid[j+1][i+1] = node;
 		}
 	}
@@ -62,7 +62,7 @@ void Grid::Draw(sf::RenderWindow& window)
 	{
 		for (int j = 0; j < 10; j++)
 		{
-			gridDraw.setPosition(sf::Vector2f((float)j * 60.f, (float)i * 60.f) + pos);
+			gridDraw.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
 			window.draw(gridDraw);
 
 			//text.setString(grid[j + 1][i + 1]->nodeName);
@@ -71,30 +71,34 @@ void Grid::Draw(sf::RenderWindow& window)
 
 			if (grid[j+1][i+1]->hasShip)
 			{
-				ship.setPosition(sf::Vector2f((float)j * 60.f, (float)i * 60.f) + pos);
+				ship.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
 				window.draw(ship);
 				if (grid[j+ 1][i + 1]->state == Node::hit)
 				{
-					shipHit.setPosition(sf::Vector2f((float)j * 60.f, (float)i * 60.f) + pos);
+					shipHit.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
 					window.draw(shipHit);
 				}
 			}
 			else if (grid[j + 1][i + 1]->state == Node::miss)
 			{
-				hit.setPosition(sf::Vector2f((float)j * 60.f, (float)i * 60.f) + pos);
+				hit.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
 				window.draw(hit);
 			}
 		}
 	}
 }
 
-bool Grid::Click(sf::Vector2i clickpos)
+Node* Grid::CheckOnGrid(int xpos, int ypos)
 {
-	sf::Vector2i rClickPos = clickpos - sf::Vector2i((int)pos.x, (int)pos.y);
-	rClickPos.x = (int)(floor((float)rClickPos.x / 60.f));
-	rClickPos.y = (int)(floor((float)rClickPos.y / 60.f));
-
-
-
-	return false;
+	for (int y = 1; y < 11; y++)
+	{
+		for (int x = 1; x < 11; x++)
+		{
+			if (grid[x][y]->x_cord == xpos && grid[x][y]->y_cord == ypos)
+			{
+				return grid[x][y];
+			}
+		}
+	}
+	return nullptr;
 }

@@ -17,7 +17,7 @@ public:
 	~Grid();
 	void CreateGrid();
 	void Draw(sf::RenderWindow& window);
-	bool Click(sf::Vector2i clickpos);
+	Node* CheckOnGrid(int x, int y);
 
 	Node* grid[11][11];
 	int shipToShoot;

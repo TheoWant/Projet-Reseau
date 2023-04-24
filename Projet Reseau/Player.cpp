@@ -3,7 +3,7 @@
 
 Player::Player()
 {
-	
+	playerTurn = false;
 }
 
 Player::~Player()
