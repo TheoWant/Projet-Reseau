@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-﻿  main.cpp
-  Player.cpp
+﻿  Grid.cpp
+  Node.cpp
+  Ship.cpp
+  main.cpp
   Generating Code...
   Projet Reseau.vcxproj -> C:\Users\vquivy\Documents\GitHub\Projet-Reseau\x64\Debug\Projet Reseau.exe
-=======
-﻿  Grid.cpp
-  Projet Reseau.vcxproj -> D:\Projet\Git\Projet-Reseau\x64\Debug\Projet Reseau.exe
->>>>>>> origin/Affichage
