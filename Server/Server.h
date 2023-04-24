@@ -1,15 +1,10 @@
-#pragma once
+#ifndef SERVER_H_
+#define SERVER_H_
 
 #include <SFML/Network.hpp>
 #include <iostream>
 #include <list>
 #include "Player.h"
-
-std::ostream& operator<<(std::ostream& os, const sf::TcpSocket& socket)
-{
-    os << '[' << socket.getRemoteAddress() << " : " << socket.getRemotePort() << ']';
-    return os;
-}
 
 class Server {
 public:
@@ -31,3 +26,5 @@ private:
     std::vector<std::string> extractPacket(sf::Packet p);
     bool checkStatus(sf::Socket::Status status, sf::TcpSocket& socket);
 };
+
+#endif /* !SERVER_H_ */

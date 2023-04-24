@@ -1,5 +1,11 @@
 #include "Server.h"
 
+std::ostream& operator<<(std::ostream& os, const sf::TcpSocket& socket)
+{
+    os << '[' << socket.getRemoteAddress() << " : " << socket.getRemotePort() << ']';
+    return os;
+}
+
 Server::Server(unsigned short port)
 {
 	_run = true;

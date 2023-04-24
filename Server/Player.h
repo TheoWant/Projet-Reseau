@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 #include <SFML/Network/TcpSocket.hpp>
 #include <string>
@@ -26,3 +27,5 @@ private:
 	std::string _uuid;
 	std::string _enemyUuid;
 };
+
+#endif /* !PLAYER_H_ */
