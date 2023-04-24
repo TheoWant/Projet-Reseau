@@ -38,7 +38,6 @@ int main()
 {
 	bool shipsReady = false;
 
-
 	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -51,14 +50,10 @@ int main()
 	gridPlayer.CreateGrid();
 	gridEnemy.CreateGrid();
 
-	//f.RandomizeShips();
-	//f1.RandomizeShips();
-
 
 	int size = 4;
 	int sizestep = 1;
 	bool downFaced = false;
-
 
 
 	while (window.isOpen())
@@ -73,7 +68,12 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				
+				//Check tour du joueur
+				//Check pos souris
+				//Si sur une case
+				//Check si la case a un bateau
+				//Changer son état
+				//Switch player turn
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
