@@ -15,6 +15,7 @@ public:
 	State state;
 
 	std::vector<Ship*> shipsToPlace;
-	char* gridGen;
+	std::string* gridGen;
+	std::stringstream gridSave;
 };
 

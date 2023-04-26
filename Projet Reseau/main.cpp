@@ -1,7 +1,5 @@
 #include "framework.h"
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
+
 ///////#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 using namespace std;
@@ -34,7 +32,8 @@ int main()
 	WSADATA WSAData;
 	SOCKET sock;
 	SOCKADDR_IN socketInfo;
-	char buffer[255];
+	std::string s;
+	char input[1024+1];
 
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {}
@@ -45,12 +44,12 @@ int main()
 	socketInfo.sin_port = htons(25565);
 
 	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
-	if (recv(sock, buffer, sizeof(buffer), 0) != SOCKET_ERROR) // receive data from server
+	int readCount = recv(sock, input, 1024, 0);
+	if (readCount != SOCKET_ERROR) // receive data from server
 	{
-		cout << buffer << endl; // print data
+		input[readCount] = 0;
+		cout << input << " Ce que le serveur envoie" << endl; // print data
 	}
-	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
-	WSACleanup(); // close winsock
 
 	bool shipsReady = false;
 	GameManager gameManager;
@@ -80,6 +79,12 @@ int main()
 	bool downFaced = false;
 
 	int shipPlacement = 0;
+
+	std::string tmp = gameManager.gridSave.str();
+	send(sock, tmp.c_str(), tmp.size(), 0);
+
+	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
+	WSACleanup(); // close winsock
 
 	while (window.isOpen())
 	{

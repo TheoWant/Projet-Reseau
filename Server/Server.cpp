@@ -55,6 +55,8 @@ Server::Server(unsigned short port)
 		int sinsize = sizeof(clientSocketInfo);
         if ((clientSocket = accept(listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
         {
+            //PostMessage()
+            //WSAAsyncSelect
             players.push_back(Player(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
 			std::cout << "Client connected !" << std::endl;
             std::string s = "Hello world! there is " + std::to_string(players.size()) + " player connected!\r\n";

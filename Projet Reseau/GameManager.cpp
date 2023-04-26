@@ -23,41 +23,41 @@ void GameManager::ReloadGrid(Grid* grid1,Grid* grid2)
 	{
 		for (int x = 0; x < 10; x++)
 		{
-			if (gridGen[index] == '0')
+			if (gridGen[index] == "0")
 			{
 				grid1->grid[x][y]->state = Node::base;
 				grid1->grid[x][y]->hasShip = false;
 			}
-			else if (gridGen[index] == '1')
+			else if (gridGen[index] == "1")
 			{
 				grid1->grid[x][y]->hasShip = true;
 				grid1->grid[x][y]->torpedo = true;
 			}
-			else if (gridGen[index] == '2')
+			else if (gridGen[index] == "2")
 			{
 				grid1->grid[x][y]->hasShip = true;
 				grid1->grid[x][y]->submarine = true;
 			}
-			else if (gridGen[index] == '3')
+			else if (gridGen[index] == "3")
 			{
 				grid1->grid[x][y]->hasShip = true;
 				grid1->grid[x][y]->atb = true;
 			}
-			else if (gridGen[index] == '4')
+			else if (gridGen[index] == "4")
 			{
 				grid1->grid[x][y]->hasShip = true;
 				grid1->grid[x][y]->cruiser = true;
 			}
-			else if (gridGen[index] == '5')
+			else if (gridGen[index] == "5")
 			{
 				grid1->grid[x][y]->hasShip = true;
 				grid1->grid[x][y]->carrier = true;
 			}
-			else if (gridGen[index] == 'X')
+			else if (gridGen[index] == "X")
 			{
 				grid1->grid[x][y]->state = Node::hit;
 			}
-			else if (gridGen[index] == 'M')
+			else if (gridGen[index] == "M")
 			{
 				grid1->grid[x][y]->state = Node::miss;
 			}
@@ -67,41 +67,41 @@ void GameManager::ReloadGrid(Grid* grid1,Grid* grid2)
 	{
 		for (int x = 0; x < 10; x++)
 		{
-			if (gridGen[index] == '0')
+			if (gridGen[index] == "0")
 			{
 				grid2->grid[x][y]->state = Node::base;
 				grid2->grid[x][y]->hasShip = false;
 			}
-			else if (gridGen[index] == '1')
+			else if (gridGen[index] == "1")
 			{
 				grid2->grid[x][y]->hasShip = true;
 				grid2->grid[x][y]->torpedo = true;
 			}
-			else if (gridGen[index] == '2')
+			else if (gridGen[index] == "2")
 			{
 				grid2->grid[x][y]->hasShip = true;
 				grid2->grid[x][y]->submarine = true;
 			}
-			else if (gridGen[index] == '3')
+			else if (gridGen[index] == "3")
 			{
 				grid2->grid[x][y]->hasShip = true;
 				grid2->grid[x][y]->atb = true;
 			}
-			else if (gridGen[index] == '4')
+			else if (gridGen[index] == "4")
 			{
 				grid2->grid[x][y]->hasShip = true;
 				grid2->grid[x][y]->cruiser = true;
 			}
-			else if (gridGen[index] == '5')
+			else if (gridGen[index] == "5")
 			{
 				grid2->grid[x][y]->hasShip = true;
 				grid2->grid[x][y]->carrier = true;
 			}
-			else if (gridGen[index] == 'X')
+			else if (gridGen[index] == "X")
 			{
 				grid2->grid[x][y]->state = Node::hit;
 			}
-			else if (gridGen[index] == 'M')
+			else if (gridGen[index] == "M")
 			{
 				grid2->grid[x][y]->state = Node::miss;
 			}
@@ -111,96 +111,87 @@ void GameManager::ReloadGrid(Grid* grid1,Grid* grid2)
 
 void GameManager::SaveGrid(Grid* grid1,Grid* grid2)
 {
-	gridGen = new char[255];
-	int index = 0;
-	gridGen[index] = '{';
-	index++;
+	gridSave.str("");
 	for (int y = 0; y < 10; y++)
 	{
 		for (int x = 0; x < 10; x++)
 		{
 			if (grid1->grid[x][y]->state == Node::base && !grid1->grid[x][y]->hasShip)
 			{
-				gridGen[index] = '0';
+				gridSave << "0";
 			}
 			else if (grid1->grid[x][y]->state == Node::hit)
 			{
-				gridGen[index] = 'X';
+				gridSave << "X";
 			}
 			else if (grid1->grid[x][y]->state == Node::miss)
 			{
-				gridGen[index] = 'M';
+				gridSave << "M";
 			}
 			else if (grid1->grid[x][y]->state == Node::base && grid1->grid[x][y]->hasShip && grid1->grid[x][y]->carrier)
 			{
-				gridGen[index] = '5';
+				gridSave << "5";
 			}
 			else if (grid1->grid[x][y]->state == Node::base && grid1->grid[x][y]->hasShip && grid1->grid[x][y]->cruiser)
 			{
-				gridGen[index] = '4';
+				gridSave << "4";
 			}
 			else if (grid1->grid[x][y]->state == Node::base && grid1->grid[x][y]->hasShip && grid1->grid[x][y]->atb)
 			{
-				gridGen[index] = '3';
+				gridSave << "3";
 			}
 			else if (grid1->grid[x][y]->state == Node::base && grid1->grid[x][y]->hasShip && grid1->grid[x][y]->submarine)
 			{
-				gridGen[index] = '2';
+				gridSave << "2";
 			}
 			else if (grid1->grid[x][y]->state == Node::base && grid1->grid[x][y]->hasShip && grid1->grid[x][y]->torpedo)
 			{
-				gridGen[index] = '1';
+				gridSave << "1";
 			}
-			index++;
 		}
-		gridGen[index] = '/';
-		index++;
+		gridSave << "/";
 	}
-	gridGen[index] = '}';
-	index++;
-	gridGen[index] = '{';
-	index++;
+	gridSave << "}";
+	gridSave << "{";
 	for (int y = 0; y < 10; y++)
 	{
 		for (int x = 0; x < 10; x++)
 		{
 			if (grid2->grid[x][y]->state == Node::base && !grid2->grid[x][y]->hasShip)
 			{
-				gridGen[index] = '0';
+				gridSave << "0";
 			}
 			else if (grid2->grid[x][y]->state == Node::hit)
 			{
-				gridGen[index] = 'X';
+				gridSave << "X";
 			}
 			else if (grid2->grid[x][y]->state == Node::miss)
 			{
-				gridGen[index] = 'M';
+				gridSave << "M";
 			}
 			else if (grid2->grid[x][y]->state == Node::base && grid2->grid[x][y]->hasShip && grid2->grid[x][y]->carrier)
 			{
-				gridGen[index] = '5';
+				gridSave << "5";
 			}
 			else if (grid2->grid[x][y]->state == Node::base && grid2->grid[x][y]->hasShip && grid2->grid[x][y]->cruiser)
 			{
-				gridGen[index] = '4';
+				gridSave << "4";
 			}
 			else if (grid2->grid[x][y]->state == Node::base && grid2->grid[x][y]->hasShip && grid2->grid[x][y]->atb)
 			{
-				gridGen[index] = '3';
+				gridSave << "3";
 			}
 			else if (grid2->grid[x][y]->state == Node::base && grid2->grid[x][y]->hasShip && grid2->grid[x][y]->submarine)
 			{
-				gridGen[index] = '2';
+				gridSave << "2";
 			}
 			else if (grid2->grid[x][y]->state == Node::base && grid2->grid[x][y]->hasShip && grid2->grid[x][y]->torpedo)
 			{
-				gridGen[index] = '1';
+				gridSave << "1";
 			}
-			index++;
 		}
-		gridGen[index] = '/';
-		index++;
+		gridSave << "/";
 	}
-	gridGen[index] = '}';
-	std::cout << gridGen;
+	gridSave << "}";
+	std::cout << gridSave.str();
 }
