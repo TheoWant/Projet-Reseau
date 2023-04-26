@@ -4,13 +4,9 @@ Grid::Grid(sf::Vector2f pos)
 {
 	this->pos = pos;
 
-	//hit.setRadius(6.f);
-	//hit.setFillColor(sf::Color::Black);
-	//hit.setOrigin(-12.f, -12.f);
-
-	hit.setRadius(12.f);
-	hit.setFillColor(sf::Color::Red);
-	hit.setOrigin(-9.f, -9.f);
+	hit.setRadius(6.f);
+	hit.setFillColor(sf::Color::Black);
+	hit.setOrigin(-12.f, -12.f);
 
 	shipHit.setRadius(12.f);
 	shipHit.setFillColor(sf::Color::Red);
@@ -37,6 +33,7 @@ Grid::Grid(sf::Vector2f pos)
 
 	// set the color
 	text.setFillColor(sf::Color::Black);
+	shipToShoot = 17;
 }
 
 Grid::~Grid() 
@@ -46,45 +43,45 @@ Grid::~Grid()
 
 void Grid::CreateGrid()
 {
-	for (int i = 0; i < 11; i++) 
+	for (int col = 0; col < 10; col++) 
 	{
-		char c = 'A' + i;
-		for (int j = 0; j < 11; j++)
+		char c = 'A' + col;
+		for (int row = 0; row < 10; row++)
 		{
 			Node* node = new Node();
-			std::string s = std::string(1, c) + std::to_string(j+1);
-			node->CreateNode(pos.x + (60*i), pos.y + (60*(j)), s);
-			grid[j+1][i+1] = node;
+			std::string s = std::string(1, c) + std::to_string(row+1);
+			node->CreateNode(pos.x + (60*row), pos.y + (60*(col)), s);
+			grid[row][col] = node;
 		}
 	}
 }
 
 void Grid::Draw(sf::RenderWindow& window)
 {
-	for (int i = 0; i < 10; i++)
+	for (int col = 0; col < 10; col++)
 	{
-		for (int j = 0; j < 10; j++)
+		for (int row = 0; row < 10; row++)
 		{
-			gridDraw.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
+			gridDraw.setPosition(sf::Vector2f((float)row * 60.f, (float)col * 60.f) + pos);
 			window.draw(gridDraw);
 
 			//text.setString(grid[j + 1][i + 1]->nodeName);
 			//text.setPosition(sf::Vector2f((float)j * 60.f, (float)i * 60.f) + pos);
 			//window.draw(text);
 
-			if (grid[j+1][i+1]->hasShip)
+			if (grid[row][col]->hasShip)
 			{
-				ship.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
+				ship.setPosition(sf::Vector2f((float)row * 60.f, (float)col * 60.f) + pos);
 				window.draw(ship);
-				if (grid[j+ 1][i + 1]->state == Node::hit)
+				if (grid[row][col]->state == Node::hit)
 				{
-					shipHit.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
+					shipHit.setPosition(sf::Vector2f((float)row * 60.f, (float)col * 60.f) + pos);
 					window.draw(shipHit);
 				}
 			}
-			else if (grid[j + 1][i + 1]->state == Node::miss)
+			else if (grid[row][col]->state == Node::miss)
 			{
-				hit.setPosition(sf::Vector2f((float)i * 60.f, (float)j * 60.f) + pos);
+				hit.setPosition(sf::Vector2f((float)row * 60.f, (float)col * 60.f) + pos);
 				window.draw(hit);
 			}
 		}
@@ -93,13 +90,13 @@ void Grid::Draw(sf::RenderWindow& window)
 
 Node* Grid::CheckOnGrid(int xpos, int ypos)
 {
-	for (int y = 1; y < 11; y++)
+	for (int col = 0; col < 10; col++)
 	{
-		for (int x = 1; x < 11; x++)
+		for (int row = 0; row < 10; row++)
 		{
-			if (grid[x][y]->x_cord == xpos && grid[x][y]->y_cord == ypos)
+			if (grid[row][col]->x_cord == xpos && grid[row][col]->y_cord == ypos)
 			{
-				return grid[x][y];
+				return grid[row][col];
 			}
 		}
 	}

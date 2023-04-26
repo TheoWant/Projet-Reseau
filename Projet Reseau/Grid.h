@@ -20,7 +20,7 @@ public:
 	void Draw(sf::RenderWindow& window);
 	Node* CheckOnGrid(int x, int y);
 
-	Node* grid[11][11];
+	Node* grid[10][10];
 	int shipToShoot;
 };
 
