@@ -8,6 +8,11 @@ Node::Node()
 	state = base;
 
 	hasShip = false;
+	carrier = false;
+	cruiser = false;
+	atb = false;
+	submarine = false;
+	torpedo = false;
 
 	nodeName = "Patrice Evra (petite blague vous fachez pas monsieur Seccia)";
 }

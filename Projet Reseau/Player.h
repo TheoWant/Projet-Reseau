@@ -6,5 +6,6 @@ public:
 	Player();
 	~Player();
 	std::string playerName;
+	bool playerTurn;
 };
 
