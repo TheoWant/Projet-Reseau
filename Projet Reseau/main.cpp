@@ -72,7 +72,10 @@ int main()
 	gridPlayer1.CreateGrid();
 	gridPlayer2.CreateGrid();
 
-	gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
+	gameManager.SaveGrid();
+
+	gameManager.grids.push_back(&gridPlayer1);
+	gameManager.grids.push_back(&gridPlayer2);
 
 	int size = 4;
 	int sizestep = 1;
@@ -80,7 +83,7 @@ int main()
 
 	int shipPlacement = 0;
 
-	std::string tmp = gameManager.gridSave.str();
+	std::string tmp = "0055555000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/";
 	send(sock, tmp.c_str(), tmp.size(), 0);
 
 	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
@@ -227,7 +230,7 @@ int main()
 						}
 					}
 					system("cls");
-					gameManager.SaveGrid(&gridPlayer1,&gridPlayer2);
+					gameManager.SaveGrid();
 				}
 				else if(player2.playerTurn)
 				{
@@ -363,12 +366,20 @@ int main()
 						}
 					}
 					system("cls");
-					gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
+					gameManager.SaveGrid();
 				}
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
 				downFaced = !downFaced;
+			}
+			if (event.type == sf::Event::KeyPressed)
+			{
+				if (event.text.unicode == sf::Keyboard::Space)
+				{
+					gameManager.gridGen = tmp;
+					gameManager.ReloadGrid();
+				}
 			}
 		}
 
