@@ -61,7 +61,7 @@ Server::Server(unsigned short port)
         hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
 
         //std::cout << "ca passe ?" << std::endl;
-
+        
         for (auto& player : players)
         {
 
@@ -82,6 +82,7 @@ Server::Server(unsigned short port)
             else
             {
                 // Message reçu
+                system("CLS");
                 std::string receivedMessage(buffer, bytesReceived);
                 std::cout << "Message recu du client : " << receivedMessage << std::endl;
             }
