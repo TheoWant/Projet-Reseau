@@ -1,9 +1,8 @@
-﻿#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#pragma once
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "common.h"
 
-#include "Server.h"
 
-#include <iostream>
-#include <Windows.h>
 
 #define WM_SOCKET WM_USER + 1
 
@@ -58,6 +57,42 @@ Server::Server(unsigned short port)
     DWORD dwThreadId;
     hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
 
+    while (_run)
+    {
+        HANDLE hThread;
+        DWORD dwThreadId;
+        hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
+
+        //std::cout << "ca passe ?" << std::endl;
+        
+        for (auto& player : players)
+        {
+
+            char buffer[1024];
+            int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
+
+            if (bytesReceived == SOCKET_ERROR)
+            {
+                std::cerr << "Error receiving data from client: " << WSAGetLastError() << std::endl;
+                continue;
+            }
+            else if (bytesReceived == 0)
+            {
+                // connexion ferm�e
+                std::cout << "Client disconnected." << std::endl;
+                continue;
+            }
+            else
+            {
+                // Message re�u
+                // To do
+                // prendre le check des inputs
+                system("CLS");
+                std::string receivedMessage(buffer, bytesReceived);
+                std::cout << "Message recu du client : " << receivedMessage << std::endl;
+            }
+        }
+	}
 }
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -109,7 +144,7 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     {
         //PostMessage()
         //WSAAsyncSelect
-        server->players.push_back(Player(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
+        server->players.push_back(Client(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
         std::cout << "Client connected !" << std::endl;
         std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
         send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
