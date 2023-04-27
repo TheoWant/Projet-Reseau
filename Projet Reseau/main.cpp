@@ -8,6 +8,8 @@ bool game = true;
 
 sf::RectangleShape shipPart;
 
+HWND hwnd;
+std::string XYDown;
 
 void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& window)
 {
@@ -27,28 +29,6 @@ void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& wind
 
 int main()
 {
-	WSADATA WSAData;
-	SOCKET sock;
-	SOCKADDR_IN socketInfo;
-	std::string s;
-	char input[1024+1];
-
-	WSADATA wsaData;
-	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {}
-
-	sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	InetPton(AF_INET, L"127.0.0.1", &socketInfo.sin_addr.s_addr);
-	socketInfo.sin_family = AF_INET;
-	socketInfo.sin_port = htons(25565);
-
-	Sleep(1000);
-
-	int connection = connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
-	if (connection != 0)
-	{
-		
-	}
-
 	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
 	srand(static_cast<unsigned int>(time(0)));
 
@@ -73,20 +53,16 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-				// to do
-				// Send une char avec la pos de la souris (x,y, bool isDownfaced(0 ou 1))
-				std::string XYDown =  std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
-				send(sock, XYDown.c_str(), XYDown.size(), 0);
+				XYDown = std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
+				PostMessage(hwnd, 1, NULL, NULL);
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
 				downFaced = !downFaced;
 			}
 		}
-
 		window.clear(sf::Color(200, 200, 200));
 		window.display();
-		
 	}
 
 	return 0;
@@ -172,8 +148,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int message = recv((SOCKET)wParam, buffer, sizeof(buffer), 0);
 			if (message == 1)
 			{
-				std::cout << "Update la string puis la send";
-				//send((SOCKET)wParam, ClientSide::XYDown.c_str(), ClientSide::XYDown.size(), 0);
+				XYDown;
 			}
 			break;
 		}
