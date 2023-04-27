@@ -178,43 +178,5 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
         break;
     }
-
-    //for (auto& player : players)
-    //{
-
-    //    char buffer[1024];
-    //    int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
-
-    //    if (bytesReceived == SOCKET_ERROR)
-    //    {
-    //        std::cerr << "Error receiving data from client: " << WSAGetLastError() << std::endl;
-    //        continue;
-    //    }
-    //    else if (bytesReceived == 0)
-    //    {
-    //        // connexion fermée
-    //        std::cout << "Client disconnected." << std::endl;
-    //        continue;
-    //    }
-    //    else
-    //    {
-    //        // Message reçu
-    //        system("CLS");
-    //        std::string receivedMessage(buffer, bytesReceived);
-    //        std::cout << "Message recu du client : " << receivedMessage << std::endl;
-    //    }
-    //}
     return DefWindowProc(hwnd,uMsg,wParam,lParam);
 }
-//int sinsize = sizeof(clientSocketInfo);
-//if ((clientSocket = accept(server->listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
-//{
-//    server->players.push_back(Client(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
-//    std::cout << "Client connected !" << std::endl;
-//    std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
-//    send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
-//
-//    // Boucler sur chaque client connecté
-//
-//    // closesocket(clientSocket); // on ferme la socket du client (temporaire, faut enlever ca, le metre autre pars)
-//}

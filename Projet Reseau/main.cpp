@@ -148,9 +148,7 @@ int main()
 	affichage->grids.push_back(gridPlayer);
 	affichage->grids.push_back(gridEnnemy);
 
-	HANDLE hThread;
-	DWORD dwThreadId;
-	hThread = CreateThread(NULL, 0, ClientToServerThread, NULL, 0, &dwThreadId);
+	LaunchThreads();
 
 	while (window.isOpen())
 	{
