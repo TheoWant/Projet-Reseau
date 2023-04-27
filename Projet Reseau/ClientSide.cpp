@@ -6,6 +6,7 @@
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+HWND hwnd;
 
 void ClientSide::drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& window)
 {
@@ -22,6 +23,7 @@ void ClientSide::drawShip(int size, sf::Vector2f pos, bool downFaced, sf::Render
 		window.draw(shipPart);
 	}
 }
+
 
 void ClientSide::MainThread()
 {
@@ -73,7 +75,7 @@ void ClientSide::MainThread()
 	}
 }
 
-DWORD WINAPI ClientSide::ClientToServerThread(LPVOID lpParam) {
+DWORD WINAPI ClientToServerThread(LPVOID lpParam) {
 	WSADATA WSAData;
 	SOCKET sock;
 	SOCKADDR_IN socketInfo;
@@ -156,7 +158,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (message == 1)
 			{
 				std::cout << "Update la string puis la send";
-				send((SOCKET)wParam, XYDown.c_str(), XYDown.size(), 0);
+				//send((SOCKET)wParam, ClientSide::XYDown.c_str(), ClientSide::XYDown.size(), 0);
 			}
 			break;
 		}
@@ -169,4 +171,12 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+void ClientSide::LaunchThreads()
+{
+	MainThread();
+	HANDLE hThread;
+	DWORD dwThreadId;
+	hThread = CreateThread(NULL, 0, ClientToServerThread, NULL, 0, &dwThreadId);
 }

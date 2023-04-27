@@ -1,4 +1,5 @@
 #pragma once
+
 class Client {
 public:
 	Client(SOCKET clientSocket, SOCKADDR_IN clientSocketInfo) : _clientSocket(clientSocket), _clientSocketInfo(clientSocketInfo) {};
