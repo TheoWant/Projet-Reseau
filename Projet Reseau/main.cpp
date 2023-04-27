@@ -43,13 +43,19 @@ int main()
 	socketInfo.sin_family = AF_INET;
 	socketInfo.sin_port = htons(25565);
 
-	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
-	int readCount = recv(sock, input, 1024, 0);
-	if (readCount != SOCKET_ERROR) // receive data from server
+	Sleep(1000);
+
+	int connection = connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
+	if (connection != 0)
 	{
-		input[readCount] = 0;
-		cout << input << " Ce que le serveur envoie" << endl; // print data
+		
 	}
+	//int readCount = recv(sock, input, 1024, 0);
+	//if (readCount != SOCKET_ERROR) // receive data from server
+	//{
+	//	input[readCount] = 0;
+	//	cout << input << " Ce que le serveur envoie" << endl; // print data
+	//}
 
 	bool shipsReady = false;
 	GameManager gameManager;

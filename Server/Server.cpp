@@ -9,42 +9,6 @@
 Server::Server()
 {
 
-    listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (listenSocket == INVALID_SOCKET)
-    {
-		std::cerr << "Error at listenSocket: " << WSAGetLastError() << std::endl;
-		WSACleanup();
-		return;
-	}
-
-    serverSocketInfo.sin_family = AF_INET;
-    serverSocketInfo.sin_addr.s_addr = INADDR_ANY;
-    serverSocketInfo.sin_port = htons(port);
-
-    i = bind(listenSocket, (SOCKADDR*)&serverSocketInfo, sizeof(serverSocketInfo));
-    if (i == SOCKET_ERROR)
-    {
-		std::cerr << "bind function failed with error: " << WSAGetLastError() << std::endl;
-		i = closesocket(listenSocket);
-        if (i == SOCKET_ERROR)
-			std::cerr << "closesocket function failed with error: " << WSAGetLastError() << std::endl;
-		WSACleanup();
-		return;
-	}
-
-    if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR)
-	{
-        std::cerr << "listen function failed with error: " << WSAGetLastError() << std::endl;
-    }
-
-    std::cout << "\033[30m\033[42mServer started.\033[0m" << std::endl;
-
-
-    // ==================== pas fini ====================
-    // faut faire une queue de client si il y en a 2 ou plus
-    // faire un thread qui gere la game entre les 2
-
-    
 }
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -81,41 +45,53 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
         NULL        // Additional application data
     );
 
-    ShowWindow(hwnd,1);
+//    ShowWindow(hwnd,1);
 
-    Server* server = reinterpret_cast<Server*>(lpParam);
+    unsigned short port = 25565;
 
-    WSAAsyncSelect(server->listenSocket, hwnd, WM_APP + 1, FD_ACCEPT | FD_CLOSE | FD_READ );
+    Server* server = new Server();
 
-    int sinsize = sizeof(clientSocketInfo);
-    if ((clientSocket = accept(server->listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
+    int i = 0;
+
+    server->listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (server->listenSocket == INVALID_SOCKET)
     {
-        //PostMessage()
-        //WSAAsyncSelect
-        server->players.push_back(Client(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
-        std::cout << "Client connected !" << std::endl;
-        std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
-        send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
-
-        // Boucler sur chaque client connecté
-
-        //closesocket(clientSocket); // on ferme la socket du client (temporaire, faut enlever ca, le metre autre pars)
+        std::cerr << "Error at listenSocket: " << WSAGetLastError() << std::endl;
+        WSACleanup();
+        return 0;
     }
 
-    LPMSG msg = nullptr;
+    server->serverSocketInfo.sin_family = AF_INET;
+    server->serverSocketInfo.sin_addr.s_addr = INADDR_ANY;
+    server->serverSocketInfo.sin_port = htons(port);
+
+    i = bind(server->listenSocket, (SOCKADDR*)&server->serverSocketInfo, sizeof(serverSocketInfo));
+    if (i == SOCKET_ERROR)
+    {
+        std::cerr << "bind function failed with error: " << WSAGetLastError() << std::endl;
+        i = closesocket(server->listenSocket);
+        if (i == SOCKET_ERROR)
+            std::cerr << "closesocket function failed with error: " << WSAGetLastError() << std::endl;
+        WSACleanup();
+        return 0;
+    }
+
+    if (listen(server->listenSocket, SOMAXCONN) == SOCKET_ERROR)
+    {
+        std::cerr << "listen function failed with error: " << WSAGetLastError() << std::endl;
+    }
+
+    std::cout << "\033[30m\033[42mServer started.\033[0m" << std::endl;
+
+    WSAAsyncSelect(server->listenSocket, hwnd, WM_SOCKET, FD_ACCEPT | FD_CLOSE | FD_READ );
+
+    MSG msg;
     BOOL bRet;
 
-    while ((bRet = GetMessage(msg, hwnd, 0, 0)) != 0)
+    while (GetMessage(&msg, hwnd, 0, 0))
     {
-        if (bRet == -1)
-        {
-            // handle the error and possibly exit
-        }
-        else
-        {
-            TranslateMessage(msg);
-            DispatchMessage(msg);
-        }
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
     }
     //PostMessage();
     return 0;
@@ -145,6 +121,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 Accept = accept(wParam, NULL, NULL);
                 // Prepare accepted socket for read, write, and close notification
                 WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_WRITE | FD_CLOSE);
+                std::cout << "Client connected !" << std::endl;
                 break;
             case FD_READ:
                 // Receive data from the socket in wParam
@@ -188,3 +165,15 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     //}
     return DefWindowProc(hwnd,uMsg,wParam,lParam);
 }
+//int sinsize = sizeof(clientSocketInfo);
+//if ((clientSocket = accept(server->listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
+//{
+//    server->players.push_back(Client(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
+//    std::cout << "Client connected !" << std::endl;
+//    std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
+//    send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
+//
+//    // Boucler sur chaque client connecté
+//
+//    // closesocket(clientSocket); // on ferme la socket du client (temporaire, faut enlever ca, le metre autre pars)
+//}
