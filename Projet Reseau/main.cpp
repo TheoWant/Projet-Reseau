@@ -98,7 +98,8 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
-
+				// to do
+				// Send une char avec la pos de la souris (x,y, bool isDownfaced(0 ou 1))
 				//Check tour du joueur
 				if (player1.playerTurn)
 				{
@@ -374,14 +375,6 @@ int main()
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
 				downFaced = !downFaced;
-			}
-			if (event.type == sf::Event::KeyPressed)
-			{
-				if (event.text.unicode == sf::Keyboard::Space)
-				{
-					//gameManager.gridGen = tmp;
-					gameManager.ReloadGrid();
-				}
 			}
 		}
 
