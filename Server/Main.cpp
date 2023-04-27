@@ -8,7 +8,19 @@ int main(int argc, char** argv)
 	}
     unsigned short port = std::stoi(argv[1]);
 
-	Server server(port);
+    WSADATA wsaData;
+
+    int i = 0;
+    i = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (i != NO_ERROR)
+    {
+        std::cerr << "Error at WSAStartup: " << i << std::endl;
+        return;
+    }
+
+    HANDLE hThread;
+    DWORD dwThreadId;
+    //hThread = CreateThread(NULL, 0, Server::ServerThread, this, 0, &dwThreadId);
 
     return 0;
 }

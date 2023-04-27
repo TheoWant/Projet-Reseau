@@ -6,17 +6,8 @@
 
 #define WM_SOCKET WM_USER + 1
 
-Server::Server(unsigned short port)
+Server::Server()
 {
-	_run = true;
-
-    int i = 0;
-    i = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (i != NO_ERROR)
-    {
-        std::cerr << "Error at WSAStartup: " << i << std::endl;
-        return;
-    }
 
     listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listenSocket == INVALID_SOCKET)
@@ -53,46 +44,7 @@ Server::Server(unsigned short port)
     // faut faire une queue de client si il y en a 2 ou plus
     // faire un thread qui gere la game entre les 2
 
-    HANDLE hThread;
-    DWORD dwThreadId;
-    hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
-
-    while (_run)
-    {
-        HANDLE hThread;
-        DWORD dwThreadId;
-        hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
-
-        //std::cout << "ca passe ?" << std::endl;
-        
-        for (auto& player : players)
-        {
-
-            char buffer[1024];
-            int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
-
-            if (bytesReceived == SOCKET_ERROR)
-            {
-                std::cerr << "Error receiving data from client: " << WSAGetLastError() << std::endl;
-                continue;
-            }
-            else if (bytesReceived == 0)
-            {
-                // connexion ferm�e
-                std::cout << "Client disconnected." << std::endl;
-                continue;
-            }
-            else
-            {
-                // Message re�u
-                // To do
-                // prendre le check des inputs
-                system("CLS");
-                std::string receivedMessage(buffer, bytesReceived);
-                std::cout << "Message recu du client : " << receivedMessage << std::endl;
-            }
-        }
-	}
+    
 }
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -102,12 +54,8 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     SOCKET clientSocket;
     SOCKADDR_IN clientSocketInfo;
 
-
-
     // Register the window class.
     const wchar_t CLASS_NAME[] = L"Sample Window Class";
-
-    
 
     WNDCLASS wc = { };
     wc.lpfnWndProc = WindowProc;
