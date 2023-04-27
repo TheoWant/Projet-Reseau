@@ -3,8 +3,8 @@ class GameManager
 {
 public:
 	GameManager();
-	void ReloadGrid(Grid* grid1,Grid* grid2);
-	void SaveGrid(Grid* grid1, Grid* grid2);
+	void ReloadGrid();
+	void SaveGrid();
 	enum State 
 	{
 		shipPlacement,
@@ -14,7 +14,9 @@ public:
 
 	State state;
 
+	std::vector<Grid*> grids;
 	std::vector<Ship*> shipsToPlace;
-	char* gridGen;
+	std::string gridGen;
+	std::stringstream gridSave;
 };
 

@@ -1,7 +1,5 @@
 #include "framework.h"
-#include <winsock2.h>
-#include <ws2tcpip.h>
-#pragma comment(lib, "ws2_32.lib")
+
 ///////#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 using namespace std;
@@ -34,7 +32,8 @@ int main()
 	WSADATA WSAData;
 	SOCKET sock;
 	SOCKADDR_IN socketInfo;
-	char buffer[255];
+	std::string s;
+	char input[1024+1];
 
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) == 0) {}
@@ -45,12 +44,12 @@ int main()
 	socketInfo.sin_port = htons(25565);
 
 	connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
-	if (recv(sock, buffer, sizeof(buffer), 0) != SOCKET_ERROR) // receive data from server
+	int readCount = recv(sock, input, 1024, 0);
+	if (readCount != SOCKET_ERROR) // receive data from server
 	{
-		cout << buffer << endl; // print data
+		input[readCount] = 0;
+		cout << input << " Ce que le serveur envoie" << endl; // print data
 	}
-	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
-	WSACleanup(); // close winsock
 
 	bool shipsReady = false;
 	GameManager gameManager;
@@ -73,13 +72,19 @@ int main()
 	gridPlayer1.CreateGrid();
 	gridPlayer2.CreateGrid();
 
-	gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
+	gameManager.SaveGrid();
+
+	gameManager.grids.push_back(&gridPlayer1);
+	gameManager.grids.push_back(&gridPlayer2);
 
 	int size = 4;
 	int sizestep = 1;
 	bool downFaced = false;
 
 	int shipPlacement = 0;
+
+	//closesocket(sock); // close socket (temporaire, faut le metre autre pars)
+	//WSACleanup(); // close winsock
 
 	while (window.isOpen())
 	{
@@ -93,6 +98,12 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
+				// to do
+				// Send une char avec la pos de la souris (x,y, bool isDownfaced(0 ou 1))
+				std::string XYDown = "/" + std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
+				send(sock, XYDown.c_str(), XYDown.size(), 0);
+
+				
 				//Check tour du joueur
 				if (player1.playerTurn)
 				{
@@ -222,7 +233,7 @@ int main()
 						}
 					}
 					system("cls");
-					gameManager.SaveGrid(&gridPlayer1,&gridPlayer2);
+					gameManager.SaveGrid();
 				}
 				else if(player2.playerTurn)
 				{
@@ -358,8 +369,12 @@ int main()
 						}
 					}
 					system("cls");
-					gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
+					gameManager.SaveGrid();
 				}
+
+
+				std::string tmp = gameManager.gridSave.str();
+				send(sock, tmp.c_str(), tmp.size(), 0);
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
