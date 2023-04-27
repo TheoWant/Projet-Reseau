@@ -3,6 +3,7 @@
 GameManager::GameManager()
 {
 	sf::Vector2i pos;
+	state = GameManager::shipPlacement;
 	Ship* Carrier = new Ship(5,pos , false);
 	Ship* Cruiser = new Ship(4,pos , false);
 	Ship* ATB = new Ship(3,pos , false);
