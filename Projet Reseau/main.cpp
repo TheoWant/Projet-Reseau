@@ -83,9 +83,6 @@ int main()
 
 	int shipPlacement = 0;
 
-	std::string tmp = "0055555000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/0000000000/";
-	send(sock, tmp.c_str(), tmp.size(), 0);
-
 	//closesocket(sock); // close socket (temporaire, faut le metre autre pars)
 	//WSACleanup(); // close winsock
 
@@ -382,7 +379,7 @@ int main()
 			{
 				if (event.text.unicode == sf::Keyboard::Space)
 				{
-					gameManager.gridGen = tmp;
+					//gameManager.gridGen = tmp;
 					gameManager.ReloadGrid();
 				}
 			}

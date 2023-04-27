@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-#include "Player.h"
 
 class Server {
 public:
@@ -13,6 +11,6 @@ public:
     SOCKET listenSocket;
     SOCKADDR_IN serverSocketInfo;
 
-    std::vector<Player> players;
+    std::vector<Client> players;
     bool waitForPlayer;
 };

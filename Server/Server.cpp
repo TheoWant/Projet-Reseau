@@ -1,8 +1,8 @@
+#pragma once
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
+#include "common.h"
 
-#include "Server.h"
-#include <iostream>
-#include <Windows.h>
+
 
 Server::Server(unsigned short port)
 {
@@ -82,6 +82,8 @@ Server::Server(unsigned short port)
             else
             {
                 // Message reçu
+                // To do
+                // prendre le check des inputs
                 system("CLS");
                 std::string receivedMessage(buffer, bytesReceived);
                 std::cout << "Message recu du client : " << receivedMessage << std::endl;
@@ -137,7 +139,7 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     {
         //PostMessage()
         //WSAAsyncSelect
-        server->players.push_back(Player(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
+        server->players.push_back(Client(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
         std::cout << "Client connected !" << std::endl;
         std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
         send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
