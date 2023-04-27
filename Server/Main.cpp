@@ -2,13 +2,28 @@
 
 int main(int argc, char** argv)
 {
-	if (argc < 2 || argc > 2) {
-		std::cout << "./server [port]" << std::endl;
-		return 84;
-	}
-    unsigned short port = std::stoi(argv[1]);
+    WSADATA wsaData;
 
-	Server server(port);
+    int i = 0;
+    i = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    if (i != NO_ERROR)
+    {
+        std::cerr << "Error at WSAStartup: " << i << std::endl;
+        return 0;
+    }
+
+    HANDLE hThread;
+    DWORD dwThreadId;
+    hThread = CreateThread(NULL, 0, Server::ServerThread, NULL, 0, &dwThreadId);
+  
+    MSG msg;
+    BOOL bRet;
+
+    while (GetMessage(&msg, NULL, 0, 0))
+    {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
 
     return 0;
 }

@@ -3,7 +3,7 @@
 
 class Server {
 public:
-    Server(unsigned short port);
+    Server();
     static DWORD WINAPI ServerThread(LPVOID lpParam);
 
     bool _run;
