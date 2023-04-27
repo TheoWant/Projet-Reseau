@@ -133,10 +133,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Server\Grid.cpp" />
+    <ClCompile Include="..\Server\Node.cpp" />
     <ClCompile Include="Affichage.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Server\Grid.h" />
+    <ClInclude Include="..\Server\Node.h" />
     <ClInclude Include="Affichage.h" />
     <ClInclude Include="framework.h" />
   </ItemGroup>
