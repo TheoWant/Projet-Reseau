@@ -58,13 +58,12 @@ Server::Server(unsigned short port)
     {
         HANDLE hThread;
         DWORD dwThreadId;
-        hThread = CreateThread(NULL, 0, MaFonctionDeThread, this, 0, &dwThreadId);
+        hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
 
         //std::cout << "ca passe ?" << std::endl;
 
         for (auto& player : players)
         {
-            std::cout << "test" << std::endl;
 
             char buffer[1024];
             int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
@@ -84,14 +83,16 @@ Server::Server(unsigned short port)
             {
                 // Message reçu
                 std::string receivedMessage(buffer, bytesReceived);
-                std::cout << "Message reçu du client : " << receivedMessage << std::endl;
+                std::cout << "Message recu du client : " << receivedMessage << std::endl;
             }
         }
 	}
 }
 
+extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-DWORD WINAPI Server::MaFonctionDeThread(LPVOID lpParam) {
+
+DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     SOCKET clientSocket;
     SOCKADDR_IN clientSocketInfo;
 
@@ -100,7 +101,7 @@ DWORD WINAPI Server::MaFonctionDeThread(LPVOID lpParam) {
     // Register the window class.
     const wchar_t CLASS_NAME[] = L"Sample Window Class";
 
-    LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    
 
     WNDCLASS wc = { };
     wc.lpfnWndProc = WindowProc;
@@ -122,27 +123,22 @@ DWORD WINAPI Server::MaFonctionDeThread(LPVOID lpParam) {
 
         NULL,       // Parent window    
         NULL,       // Menu
-        NULL,  // Instance handle
+        NULL,       // Instance handle
         NULL        // Additional application data
     );
 
-    if (hwnd == NULL)
-    {
-        return 0;
-    }
-
     Server* server = reinterpret_cast<Server*>(lpParam);
 
-    WSAAsyncSelect(server->GetListenSocket(), hwnd, WM_APP + 1, FD_ACCEPT | FD_CLOSE );
+    WSAAsyncSelect(server->listenSocket, hwnd, WM_APP + 1, FD_ACCEPT | FD_CLOSE );
 
     int sinsize = sizeof(clientSocketInfo);
-    if ((clientSocket = accept(server->GetListenSocket(), (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
+    if ((clientSocket = accept(server->listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
     {
         //PostMessage()
         //WSAAsyncSelect
-        server->GetPlayers().push_back(Player(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
+        server->players.push_back(Player(clientSocket, clientSocketInfo)); // on ajoute le client a la liste des joueurs
         std::cout << "Client connected !" << std::endl;
-        std::string s = "Hello world! there is " + std::to_string(server->GetPlayers().size()) + " player connected!\r\n";
+        std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
         send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
 
         // Boucler sur chaque client connecté
@@ -150,4 +146,9 @@ DWORD WINAPI Server::MaFonctionDeThread(LPVOID lpParam) {
         //closesocket(clientSocket); // on ferme la socket du client (temporaire, faut enlever ca, le metre autre pars)
     }
     return 0;
+}
+
+LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    return LRESULT();
 }

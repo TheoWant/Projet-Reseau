@@ -6,11 +6,8 @@
 class Server {
 public:
     Server(unsigned short port);
-    static DWORD WINAPI MaFonctionDeThread(LPVOID lpParam);
-    SOCKET GetListenSocket() { return listenSocket; }
-    std::vector<Player> GetPlayers() { return players; }
+    static DWORD WINAPI ServerThread(LPVOID lpParam);
 
-private:
     bool _run;
     WSADATA wsaData;
     SOCKET listenSocket;
