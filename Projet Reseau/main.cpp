@@ -99,7 +99,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int message = recv((SOCKET)wParam, buffer, sizeof(buffer), 0);
 			if (message == 1)
 			{
-				send(Accept, XYDown.c_str(),XYDown.size(),0);
+				XYDown;
 			}
 			break;
 		}

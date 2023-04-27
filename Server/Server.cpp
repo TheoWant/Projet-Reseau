@@ -98,6 +98,8 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
 
     WSAAsyncSelect(server->listenSocket, hwnd, WM_SOCKET, FD_ACCEPT | FD_CLOSE | FD_READ );
 
+    SetWindowLongPtr(hwnd, GWLP_USERDATA, (LONG_PTR)server);
+
     MSG msg;
 
     while (GetMessage(&msg, hwnd, 0, 0))
@@ -111,6 +113,7 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
 
 LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    Server* server = (Server*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
     SOCKET Accept;
 
     switch (uMsg)
@@ -134,7 +137,6 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 // Prepare accepted socket for read, write, and close notification
                 WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_CLOSE);
                 std::cout << "Client connected !" << std::endl;
-                Server::players.push_back((SOCKET)wParam);
                 break;
 
             case FD_READ:
