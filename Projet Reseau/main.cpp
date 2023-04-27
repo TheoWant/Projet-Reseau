@@ -106,7 +106,7 @@ int main()
 			{
 				// to do
 				// Send une char avec la pos de la souris (x,y, bool isDownfaced(0 ou 1))
-				std::string XYDown = "/" + std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
+				std::string XYDown =  std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
 				send(sock, XYDown.c_str(), XYDown.size(), 0);
 
 				
@@ -377,10 +377,6 @@ int main()
 					system("cls");
 					gameManager.SaveGrid();
 				}
-
-
-				std::string tmp = gameManager.gridSave.str();
-				send(sock, tmp.c_str(), tmp.size(), 0);
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{

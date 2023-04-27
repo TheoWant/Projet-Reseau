@@ -116,19 +116,38 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         // Determine what event occurred on the socket
         switch (WSAGETSELECTEVENT(lParam))
         {
+            
             case FD_ACCEPT:
                 // Accept an incoming connection
                 Accept = accept(wParam, NULL, NULL);
                 // Prepare accepted socket for read, write, and close notification
-                WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_WRITE | FD_CLOSE);
+                WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_CLOSE);
                 std::cout << "Client connected !" << std::endl;
                 break;
             case FD_READ:
+            {
                 // Receive data from the socket in wParam
+                char buffer[1024];
+                int bytesReceived = recv(wParam, buffer, sizeof(buffer), 0);
+                std::string receivedMessage(buffer, bytesReceived);
+                std::cout << "Message recu du client : " << receivedMessage << std::endl;
+
+                std::string tmpString;
+                std::vector<std::string> segList;
+                char separator = '/';
+                for (int i = 0; i < receivedMessage.size(); i++) {
+                    if (buffer[i] != separator)
+                    {
+                        tmpString += buffer[i];
+                    }
+                    else
+                    {
+                        segList.push_back(tmpString);
+                        tmpString.clear();
+                    }
+                }
                 break;
-            case FD_WRITE:
-                // The socket in wParam is ready for sending data
-                break;
+            }
 
             case FD_CLOSE:
                 // The connection is now closed
