@@ -138,6 +138,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 // Prepare accepted socket for read, write, and close notification
                 WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_CLOSE);
                 std::cout << "Client connected !" << std::endl;
+                Server::players.push_back((SOCKET)wParam);
                 break;
             case FD_READ:
             {
