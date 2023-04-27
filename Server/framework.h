@@ -4,5 +4,6 @@
 
 #include "../Projet Reseau/common.h"
 
-#include "Server.h"
+
 #include "Client.h"
+#include "Server.h"

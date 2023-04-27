@@ -133,10 +133,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Projet Reseau\GameManager.cpp" />
+    <ClCompile Include="..\Projet Reseau\Player.cpp" />
+    <ClCompile Include="..\Projet Reseau\Ship.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Projet Reseau\GameManager.h" />
+    <ClInclude Include="..\Projet Reseau\Player.h" />
+    <ClInclude Include="..\Projet Reseau\Ship.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Server.h" />

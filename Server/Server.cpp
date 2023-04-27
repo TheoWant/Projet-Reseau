@@ -11,6 +11,8 @@ Server::Server()
 
 }
 
+std::vector<unsigned long long> Server::players;
+
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 DWORD WINAPI Server::ServerThread(LPVOID lpParam) {

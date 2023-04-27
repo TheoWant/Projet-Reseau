@@ -12,8 +12,8 @@
 #pragma comment(lib, "ws2_32.lib")
 
 
-#include "../Server/Client.h"
 #include "Player.h"
+#include "../Server/Client.h"
 #include "Node.h"
 #include "Grid.h"
 #include "Ship.h"
