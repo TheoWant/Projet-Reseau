@@ -1,8 +1,11 @@
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+ï»¿#define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include "Server.h"
+
 #include <iostream>
 #include <Windows.h>
+
+#define WM_SOCKET WM_USER + 1
 
 Server::Server(unsigned short port)
 {
@@ -50,44 +53,11 @@ Server::Server(unsigned short port)
     // ==================== pas fini ====================
     // faut faire une queue de client si il y en a 2 ou plus
     // faire un thread qui gere la game entre les 2
-    
-    
 
+    HANDLE hThread;
+    DWORD dwThreadId;
+    hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
 
-    while (_run)
-    {
-        HANDLE hThread;
-        DWORD dwThreadId;
-        hThread = CreateThread(NULL, 0, ServerThread, this, 0, &dwThreadId);
-
-        //std::cout << "ca passe ?" << std::endl;
-        
-        for (auto& player : players)
-        {
-
-            char buffer[1024];
-            int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
-
-            if (bytesReceived == SOCKET_ERROR)
-            {
-                std::cerr << "Error receiving data from client: " << WSAGetLastError() << std::endl;
-                continue;
-            }
-            else if (bytesReceived == 0)
-            {
-                // connexion fermée
-                std::cout << "Client disconnected." << std::endl;
-                continue;
-            }
-            else
-            {
-                // Message reçu
-                system("CLS");
-                std::string receivedMessage(buffer, bytesReceived);
-                std::cout << "Message recu du client : " << receivedMessage << std::endl;
-            }
-        }
-	}
 }
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -128,9 +98,11 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
         NULL        // Additional application data
     );
 
+    ShowWindow(hwnd,1);
+
     Server* server = reinterpret_cast<Server*>(lpParam);
 
-    WSAAsyncSelect(server->listenSocket, hwnd, WM_APP + 1, FD_ACCEPT | FD_CLOSE );
+    WSAAsyncSelect(server->listenSocket, hwnd, WM_APP + 1, FD_ACCEPT | FD_CLOSE | FD_READ );
 
     int sinsize = sizeof(clientSocketInfo);
     if ((clientSocket = accept(server->listenSocket, (SOCKADDR*)&clientSocketInfo, &sinsize)) != INVALID_SOCKET) // si il y a un client
@@ -142,14 +114,94 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
         std::string s = "Hello world! there is " + std::to_string(server->players.size()) + " player connected!\r\n";
         send(clientSocket, s.c_str(), s.size(), 0); // on envoie un message au client
 
-        // Boucler sur chaque client connecté
+        // Boucler sur chaque client connectÃ©
 
         //closesocket(clientSocket); // on ferme la socket du client (temporaire, faut enlever ca, le metre autre pars)
     }
+
+    LPMSG msg = nullptr;
+    BOOL bRet;
+
+    while ((bRet = GetMessage(msg, hwnd, 0, 0)) != 0)
+    {
+        if (bRet == -1)
+        {
+            // handle the error and possibly exit
+        }
+        else
+        {
+            TranslateMessage(msg);
+            DispatchMessage(msg);
+        }
+    }
+    //PostMessage();
     return 0;
 }
 
 LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-    return LRESULT();
+    SOCKET Accept;
+
+    switch (uMsg)
+    {
+
+    case WM_SOCKET:
+        // Determine whether an error occurred on the
+        // socket by using the WSAGETSELECTERROR() macro
+        if (WSAGETSELECTERROR(lParam))
+        {
+            // Display the error and close the socket
+            closesocket((SOCKET)wParam);
+            break;
+        }
+        // Determine what event occurred on the socket
+        switch (WSAGETSELECTEVENT(lParam))
+        {
+            case FD_ACCEPT:
+                // Accept an incoming connection
+                Accept = accept(wParam, NULL, NULL);
+                // Prepare accepted socket for read, write, and close notification
+                WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_WRITE | FD_CLOSE);
+                break;
+            case FD_READ:
+                // Receive data from the socket in wParam
+                break;
+            case FD_WRITE:
+                // The socket in wParam is ready for sending data
+                break;
+
+            case FD_CLOSE:
+                // The connection is now closed
+                closesocket((SOCKET)wParam);
+                break;
+        }
+        break;
+    }
+
+    //for (auto& player : players)
+    //{
+
+    //    char buffer[1024];
+    //    int bytesReceived = recv(player.getClientSocket(), buffer, sizeof(buffer), 0);
+
+    //    if (bytesReceived == SOCKET_ERROR)
+    //    {
+    //        std::cerr << "Error receiving data from client: " << WSAGetLastError() << std::endl;
+    //        continue;
+    //    }
+    //    else if (bytesReceived == 0)
+    //    {
+    //        // connexion fermÃ©e
+    //        std::cout << "Client disconnected." << std::endl;
+    //        continue;
+    //    }
+    //    else
+    //    {
+    //        // Message reÃ§u
+    //        system("CLS");
+    //        std::string receivedMessage(buffer, bytesReceived);
+    //        std::cout << "Message recu du client : " << receivedMessage << std::endl;
+    //    }
+    //}
+    return DefWindowProc(hwnd,uMsg,wParam,lParam);
 }
