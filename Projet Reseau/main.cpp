@@ -80,11 +80,9 @@ int main()
 
 	int shipPlacement = 0;
 
-	std::string tmp = gameManager.gridSave.str();
-	send(sock, tmp.c_str(), tmp.size(), 0);
 
-	closesocket(sock); // close socket (temporaire, faut le metre autre pars)
-	WSACleanup(); // close winsock
+	//closesocket(sock); // close socket (temporaire, faut le metre autre pars)
+	//WSACleanup(); // close winsock
 
 	while (window.isOpen())
 	{
@@ -98,6 +96,7 @@ int main()
 				window.close();
 			if (event.type == sf::Event::MouseButtonReleased)
 			{
+
 				//Check tour du joueur
 				if (player1.playerTurn)
 				{
@@ -365,6 +364,10 @@ int main()
 					system("cls");
 					gameManager.SaveGrid(&gridPlayer1, &gridPlayer2);
 				}
+
+
+				std::string tmp = gameManager.gridSave.str();
+				send(sock, tmp.c_str(), tmp.size(), 0);
 			}
 			if (event.type == sf::Event::MouseWheelMoved)
 			{
