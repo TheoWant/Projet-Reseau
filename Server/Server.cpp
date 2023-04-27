@@ -62,7 +62,7 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     gameManager.grids.push_back(gridPlayer1);
     gameManager.grids.push_back(gridPlayer2);
 
-    gameManager.SaveGrid();
+    //gameManager.SaveGrid();
 
     int i = 0;
 

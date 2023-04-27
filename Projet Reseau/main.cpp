@@ -29,50 +29,6 @@ void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& wind
 	}
 }
 
-int main()
-{
-	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
-	srand(static_cast<unsigned int>(time(0)));
-
-	bool downFaced = false;
-
-	int shipPlacement = 0;
-
-	Affichage* affichage = new Affichage();
-
-	Grid* gridPlayer = new Grid();
-	Grid* gridEnnemy = new Grid();
-
-	affichage->grids.push_back(gridPlayer);
-	affichage->grids.push_back(gridEnnemy);
-
-	while (window.isOpen())
-	{
-		int x = sf::Mouse::getPosition(window).x - (sf::Mouse::getPosition(window).x % 60);
-		int y = sf::Mouse::getPosition(window).y - (sf::Mouse::getPosition(window).y % 60);
-
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-			if (event.type == sf::Event::MouseButtonReleased)
-			{
-				XYDown = std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
-				PostMessage(hwnd, 1, NULL, NULL);
-			}
-			if (event.type == sf::Event::MouseWheelMoved)
-			{
-				downFaced = !downFaced;
-			}
-		}
-		window.clear(sf::Color(200, 200, 200));
-		window.display();
-	}
-
-	return 0;
-}
-
 DWORD WINAPI ClientToServerThread(LPVOID lpParam) {
 	WSADATA WSAData;
 	SOCKET sock;
@@ -114,7 +70,7 @@ DWORD WINAPI ClientToServerThread(LPVOID lpParam) {
 	socketInfo.sin_family = AF_INET;
 	socketInfo.sin_port = htons(25565);
 
-	Sleep(1000);
+	Sleep(2000);
 	int connection = connect(sock, (SOCKADDR*)&socketInfo, sizeof(socketInfo)); // connect to server
 
 	MSG msg;
@@ -173,4 +129,52 @@ void LaunchThreads()
 	HANDLE hThread;
 	DWORD dwThreadId;
 	hThread = CreateThread(NULL, 0, ClientToServerThread, NULL, 0, &dwThreadId);
+}
+
+int main()
+{
+	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
+	srand(static_cast<unsigned int>(time(0)));
+
+	bool downFaced = false;
+
+	int shipPlacement = 0;
+
+	Affichage* affichage = new Affichage();
+
+	Grid* gridPlayer = new Grid();
+	Grid* gridEnnemy = new Grid();
+
+	affichage->grids.push_back(gridPlayer);
+	affichage->grids.push_back(gridEnnemy);
+
+	HANDLE hThread;
+	DWORD dwThreadId;
+	hThread = CreateThread(NULL, 0, ClientToServerThread, NULL, 0, &dwThreadId);
+
+	while (window.isOpen())
+	{
+		int x = sf::Mouse::getPosition(window).x - (sf::Mouse::getPosition(window).x % 60);
+		int y = sf::Mouse::getPosition(window).y - (sf::Mouse::getPosition(window).y % 60);
+
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			if (event.type == sf::Event::MouseButtonReleased)
+			{
+				XYDown = std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
+				PostMessage(hwnd, 1, NULL, NULL);
+			}
+			if (event.type == sf::Event::MouseWheelMoved)
+			{
+				downFaced = !downFaced;
+			}
+		}
+		window.clear(sf::Color(200, 200, 200));
+		window.display();
+	}
+
+	return 0;
 }
