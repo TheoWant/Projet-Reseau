@@ -100,6 +100,10 @@ int main()
 			{
 				// to do
 				// Send une char avec la pos de la souris (x,y, bool isDownfaced(0 ou 1))
+				std::string XYDown = "/" + std::to_string(x) + "/" + std::to_string(y) + "/" + std::to_string(downFaced) + "/";
+				send(sock, XYDown.c_str(), XYDown.size(), 0);
+
+				
 				//Check tour du joueur
 				if (player1.playerTurn)
 				{
