@@ -146,6 +146,19 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                         tmpString.clear();
                     }
                 }
+
+                //-----------|TO DO|-------------
+                // Check l'état de la partie
+                // Si dans la pose de bateau
+                // Check si la pose du bateau est correct
+                // Si dans la phase d'attaque
+                // Check la case touché
+                // Modifier la string de réponse
+                // Check si fin du jeu
+                // Si dans la phase de fin
+                // Rien faire
+                // Send la string
+
                 break;
             }
 
