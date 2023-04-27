@@ -73,6 +73,48 @@ int main()
 	return 0;
 }
 
+LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	SOCKET Accept;
+
+	switch (uMsg)
+	{
+
+	case WM_SOCKET:
+		// Determine whether an error occurred on the
+		// socket by using the WSAGETSELECTERROR() macro
+		if (WSAGETSELECTERROR(lParam))
+		{
+			// Display the error and close the socket
+			closesocket((SOCKET)wParam);
+			break;
+		}
+		// Determine what event occurred on the socket
+		switch (WSAGETSELECTEVENT(lParam))
+		{
+		case FD_READ:
+		{
+			// Receive data from the socket in wParam
+			char buffer[1024];
+			int message = recv((SOCKET)wParam, buffer, sizeof(buffer), 0);
+			if (message == 1)
+			{
+				send(Accept, XYDown.c_str(),XYDown.size(),0);
+			}
+			break;
+		}
+
+		case FD_CLOSE:
+			// The connection is now closed
+			closesocket((SOCKET)wParam);
+			break;
+		}
+		break;
+	}
+	return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+
 DWORD WINAPI ClientToServerThread(LPVOID lpParam) {
 	WSADATA WSAData;
 	SOCKET sock;
@@ -127,46 +169,6 @@ DWORD WINAPI ClientToServerThread(LPVOID lpParam) {
 	return 0;
 }
 
-LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	SOCKET Accept;
-
-	switch (uMsg)
-	{
-
-	case WM_SOCKET:
-		// Determine whether an error occurred on the
-		// socket by using the WSAGETSELECTERROR() macro
-		if (WSAGETSELECTERROR(lParam))
-		{
-			// Display the error and close the socket
-			closesocket((SOCKET)wParam);
-			break;
-		}
-		// Determine what event occurred on the socket
-		switch (WSAGETSELECTEVENT(lParam))
-		{
-		case FD_READ:
-		{
-			// Receive data from the socket in wParam
-			char buffer[1024];
-			int message = recv((SOCKET)wParam, buffer, sizeof(buffer), 0);
-			if (message == 1)
-			{
-				XYDown;
-			}
-			break;
-		}
-
-		case FD_CLOSE:
-			// The connection is now closed
-			closesocket((SOCKET)wParam);
-			break;
-		}
-		break;
-	}
-	return DefWindowProc(hwnd, uMsg, wParam, lParam);
-}
 
 void LaunchThreads()
 {
