@@ -1,4 +1,4 @@
-#include "common.h"
+#include "framework.h"
 
 int main(int argc, char** argv)
 {
@@ -15,9 +15,8 @@ int main(int argc, char** argv)
     HANDLE hThread;
     DWORD dwThreadId;
     hThread = CreateThread(NULL, 0, Server::ServerThread, NULL, 0, &dwThreadId);
-  
+
     MSG msg;
-    BOOL bRet;
 
     while (GetMessage(&msg, NULL, 0, 0))
     {

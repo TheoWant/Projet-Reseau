@@ -1,6 +1,6 @@
 #include "framework.h"
 
-///////#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define WM_SOCKET WM_USER + 1
 
 using namespace std;
 
@@ -10,6 +10,8 @@ sf::RectangleShape shipPart;
 
 HWND hwnd;
 std::string XYDown;
+
+extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& window)
 {
@@ -32,14 +34,17 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1380, 720), "Sea Battle", sf::Style::Titlebar | sf::Style::Close);
 	srand(static_cast<unsigned int>(time(0)));
 
-	int size = 4;
-	int sizestep = 1;
 	bool downFaced = false;
 
 	int shipPlacement = 0;
 
-	//closesocket(sock); // close socket (temporaire, faut le metre autre pars)
-	//WSACleanup(); // close winsock
+	Affichage* affichage = new Affichage();
+
+	Grid* gridPlayer = new Grid();
+	Grid* gridEnnemy = new Grid();
+
+	affichage->grids.push_back(gridPlayer);
+	affichage->grids.push_back(gridEnnemy);
 
 	while (window.isOpen())
 	{
@@ -165,7 +170,6 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void LaunchThreads()
 {
-	MainThread();
 	HANDLE hThread;
 	DWORD dwThreadId;
 	hThread = CreateThread(NULL, 0, ClientToServerThread, NULL, 0, &dwThreadId);

@@ -2,9 +2,15 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 #include "framework.h"
 
-
-
 #define WM_SOCKET WM_USER + 1
+
+GameManager gameManager;
+
+Player player1;
+Player player2;
+
+Grid* gridPlayer1 = new Grid();
+Grid* gridPlayer2 = new Grid();
 
 Server::Server()
 {
@@ -12,7 +18,6 @@ Server::Server()
 }
 
 extern "C" LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 
 DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     SOCKET clientSocket;
@@ -45,21 +50,14 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
         NULL        // Additional application data
     );
 
-//    ShowWindow(hwnd,1);
-
     unsigned short port = 25565;
 
     Server* server = new Server();
 
-    GameManager gameManager;
-
-    Player player1;
     player1.playerTurn = true;
 
-    Player player2;
-
-    Grid* gridPlayer1;
-    Grid* gridPlayer2;
+    gridPlayer1->CreateGrid();
+    gridPlayer2->CreateGrid();
 
     gameManager.grids.push_back(gridPlayer1);
     gameManager.grids.push_back(gridPlayer2);
@@ -101,7 +99,6 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     WSAAsyncSelect(server->listenSocket, hwnd, WM_SOCKET, FD_ACCEPT | FD_CLOSE | FD_READ );
 
     MSG msg;
-    BOOL bRet;
 
     while (GetMessage(&msg, hwnd, 0, 0))
     {
@@ -131,7 +128,6 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
         // Determine what event occurred on the socket
         switch (WSAGETSELECTEVENT(lParam))
         {
-            
             case FD_ACCEPT:
                 // Accept an incoming connection
                 Accept = accept(wParam, NULL, NULL);
@@ -139,6 +135,7 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_CLOSE);
                 std::cout << "Client connected !" << std::endl;
                 break;
+
             case FD_READ:
             {
                 // Receive data from the socket in wParam
@@ -163,15 +160,12 @@ LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 }
 
                 //-----------|TO DO|-------------
-                // Check l'état de la partie
                 // Si dans la pose de bateau
+                // Check quel client a joué
                 // Check si la pose du bateau est correct
                 // Si dans la phase d'attaque
                 // Check la case touché
                 // Modifier la string de réponse
-                // Check si fin du jeu
-                // Si dans la phase de fin
-                // Rien faire
                 // Send la string
 
                 break;
