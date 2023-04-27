@@ -23,7 +23,7 @@ Grid::Grid(sf::Vector2f pos)
 	{
 		throw;
 	}
-	
+
 	font.loadFromFile("arial.ttf");
 	// select the font
 	text.setFont(font); // font is a sf::Font
@@ -36,21 +36,21 @@ Grid::Grid(sf::Vector2f pos)
 	shipToShoot = 17;
 }
 
-Grid::~Grid() 
+Grid::~Grid()
 {
 
 }
 
 void Grid::CreateGrid()
 {
-	for (int col = 0; col < 10; col++) 
+	for (int col = 0; col < 10; col++)
 	{
 		char c = 'A' + col;
 		for (int row = 0; row < 10; row++)
 		{
 			Node* node = new Node();
-			std::string s = std::string(1, c) + std::to_string(row+1);
-			node->CreateNode(pos.x + (60*row), pos.y + (60*(col)), s);
+			std::string s = std::string(1, c) + std::to_string(row + 1);
+			node->CreateNode(pos.x + (60 * row), pos.y + (60 * (col)), s);
 			grid[row][col] = node;
 		}
 	}

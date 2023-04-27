@@ -19,7 +19,6 @@ public:
 
 	State state;
 
-	bool hasShip,carrier,cruiser,atb,submarine,torpedo;
+	bool hasShip, carrier, cruiser, atb, submarine, torpedo;
 	std::string nodeName;
 };
-

@@ -5,7 +5,7 @@ public:
 	GameManager();
 	void ReloadGrid();
 	void SaveGrid();
-	enum State 
+	enum State
 	{
 		shipPlacement,
 		shipShooting,

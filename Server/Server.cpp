@@ -1,6 +1,6 @@
 #pragma once
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
-#include "common.h"
+#include "framework.h"
 
 
 
@@ -50,6 +50,21 @@ DWORD WINAPI Server::ServerThread(LPVOID lpParam) {
     unsigned short port = 25565;
 
     Server* server = new Server();
+
+    GameManager gameManager;
+
+    Player player1;
+    player1.playerTurn = true;
+
+    Player player2;
+
+    Grid* gridPlayer1;
+    Grid* gridPlayer2;
+
+    gameManager.grids.push_back(gridPlayer1);
+    gameManager.grids.push_back(gridPlayer2);
+
+    gameManager.SaveGrid();
 
     int i = 0;
 
