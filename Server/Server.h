@@ -11,6 +11,6 @@ public:
     SOCKET listenSocket;
     SOCKADDR_IN serverSocketInfo;
 
-    static std::vector<SOCKET> players;
+    std::vector<SOCKET> players;
     bool waitForPlayer;
 };

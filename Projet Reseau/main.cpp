@@ -1,6 +1,8 @@
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define WM_SOCKET WM_USER + 1
 #include "framework.h"
 
-#define WM_SOCKET WM_USER + 1
+
 
 using namespace std;
 
@@ -27,6 +29,52 @@ void drawShip(int size, sf::Vector2f pos, bool downFaced, sf::RenderWindow& wind
 		}
 		window.draw(shipPart);
 	}
+}
+
+LRESULT WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    SOCKET Accept;
+
+    switch (uMsg)
+    {
+
+    case WM_SOCKET:
+        // Determine whether an error occurred on the
+        // socket by using the WSAGETSELECTERROR() macro
+        if (WSAGETSELECTERROR(lParam))
+        {
+            // Display the error and close the socket
+            closesocket((SOCKET)wParam);
+            break;
+        }
+        // Determine what event occurred on the socket
+        switch (WSAGETSELECTEVENT(lParam))
+        {
+        case FD_ACCEPT:
+            // Accept an incoming connection
+            Accept = accept(wParam, NULL, NULL);
+            // Prepare accepted socket for read, write, and close notification
+            WSAAsyncSelect(Accept, hwnd, WM_SOCKET, FD_READ | FD_CLOSE);
+            std::cout << "Client connected !" << std::endl;
+            break;
+
+        case FD_READ:
+        {
+            // Receive data from the socket in wParam
+            char buffer[1024];
+            int bytesReceived = recv(wParam, buffer, sizeof(buffer), 0);
+            std::string receivedMessage(buffer, bytesReceived);
+            std::cout << "Message recu du Serveur : " << receivedMessage << std::endl;
+        }
+
+        case FD_CLOSE:
+            // The connection is now closed
+            closesocket((SOCKET)wParam);
+            break;
+        }
+        break;
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
 }
 
 DWORD WINAPI ClientToServerThread(LPVOID lpParam) {

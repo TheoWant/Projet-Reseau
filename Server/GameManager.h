@@ -3,8 +3,7 @@ class GameManager
 {
 public:
 	GameManager();
-	void ReloadGrid();
-	void SaveGrid();
+	void SaveGrid(Grid* gridToSave, Grid* grid);
 	enum State
 	{
 		shipPlacement,

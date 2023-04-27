@@ -7,5 +7,6 @@ public:
 	~Player();
 	std::string playerName;
 	bool playerTurn;
+	SOCKET socket;
 };
 
